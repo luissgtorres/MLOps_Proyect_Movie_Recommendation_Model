@@ -91,8 +91,9 @@ def score_titulo(titulo: str):
 
 @app.get('/votos_titulo/{titulo}')
 def votos_titulo(titulo: str):
-    ''' La función devuelve el voto total y el voto promedio para el título de la película ingresado.
-        En el caso de películas con el mismo título, la función ordenara el dataframe en función de 
+    ''' La función devuelve el voto total y el voto promedio para el título de la película ingresado.'''
+
+    ''' En el caso de películas con el mismo título, la función ordenara el dataframe en función de 
         la cantidad de votos de forma descendente. En el caso donde el título se repita tomará cómo 
         resultado el del primer valor que aparezca.'''
     
