@@ -12,7 +12,7 @@ def cantidad_filmaciones_mes(mes: str):
     '''La función devuelve la cantidad de películas que fueron estrenadas en el mes ingresado por el usuario.'''
 
     mes = mes.title()
-    
+      
     ''' Convertimos la columna release_date a tipo datetime'''
 
     movies_df['release_date'] = pd.to_datetime(movies_df['release_date'])
@@ -21,14 +21,14 @@ def cantidad_filmaciones_mes(mes: str):
 
     lista_mes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
     if mes not in lista_mes:
-        return {'mensaje_error': 'El texto ingresado no es un mes'} # Devuelve este mensaje si no es un mes
+        return {'mensaje_error': 'El texto ingresado no es un mes'} 
     else:
         numero_mes = lista_mes.index(mes) + 1 # Pasamos el mes a número
         cantidad = 0
         for i in range(0, movies_df.shape[0]):
-            x = movies_df.loc[i, 'release_date'].month
+            x = movies_df.loc[i, 'release_date'].month # Extraemos el mes de la columna release_date
             if x == numero_mes:
-                cantidad += 1
+                cantidad += 1 # Sumamos si el mes ingresado coincide
         
         return {'Mes': mes, 'Cantidad': cantidad}           
 
@@ -39,6 +39,13 @@ def cantidad_filmaciones_dia(dia: str):
     '''La función devuelve la cantidad de películas que fueron estrenadas en el día de la semana ingresado.'''
 
     dia = dia.title()
+
+    ''' Corregimos en caso de que ingresen el día sin los acentos'''
+
+    if dia == 'Miercoles':
+        dia = 'Miércoles'
+    elif dia == 'Sabado':
+        dia = 'Sábado'
 
     ''' Convertimos la columna release_date a tipo datetime'''
 
@@ -53,9 +60,9 @@ def cantidad_filmaciones_dia(dia: str):
         numero_dia = lista_dias.index(dia) # Pasamos el día a número
         cantidad = 0
         for i in range(0, movies_df.shape[0]):
-            x = movies_df.loc[i, 'release_date'].weekday()
+            x = movies_df.loc[i, 'release_date'].weekday() # Extraemos el día de la semana de la columna release_date
             if x == numero_dia:
-                cantidad += 1
+                cantidad += 1 # Sumamos si el día de la semana coincide
         
         return {'Dia': dia, 'Cantidad': cantidad}        
     
@@ -63,14 +70,15 @@ def cantidad_filmaciones_dia(dia: str):
 
 @app.get('/score_titulo/{titulo}')
 def score_titulo(titulo: str):
-    ''' La función devuelve el año y la popularidad para la película ingresada. En el caso de películas
-        con el mismo título, la función ordenará el dataframe en función de la popularidad de las películas 
-        de forma descendente. En el caso donde el título se repita tomará cómo el resultado el del 
-        primer valor que aparezca.'''
+    ''' La función devuelve el año y la popularidad para la película ingresada.''' 
     
-    '''Primero revisamos si el texto ingresado es un título presente en el dataframe'''
-
+    ''' En el caso de películas con el mismo título, la función ordenará el dataframe en función 
+        de la popularidad de las películas de forma descendente. En el caso donde el título se 
+        repita tomará cómo el resultado el del primer valor que aparezca.'''
+    
     titulo = titulo.title()
+        
+    '''Primero revisamos si el texto ingresado es un título presente en el dataframe'''   
 
     j = 0
     for i in range(0, movies_df.shape[0]):
@@ -79,11 +87,12 @@ def score_titulo(titulo: str):
     if j == 0:
         return {'mensaje_error':'El texto ingresado no se encuentra en el conjunto de datos'}
     else:
+        movies_df.sort_values(by = ['popularity'], ascending = False, inplace = True) # Ordenamos el dataframe en función de la popularidad de forma descendente
         i = 0
-        while titulo != movies_df.loc[i, 'title']:
+        while titulo != movies_df.loc[i, 'title']: # Iteramos hasta conseguir el título de la película y guardamos el índice
             i += 1
-        anio = int(movies_df.loc[i, 'release_year'])
-        popularidad = movies_df.loc[i, 'popularity']
+        anio = int(movies_df.loc[i, 'release_year']) # Extraemos el año
+        popularidad = movies_df.loc[i, 'popularity'] # Extraemos la popularidad
         
         return {'titulo': titulo, 'anio': anio, 'popularidad': popularidad}        
     
@@ -97,9 +106,9 @@ def votos_titulo(titulo: str):
         la cantidad de votos de forma descendente. En el caso donde el título se repita tomará cómo 
         resultado el del primer valor que aparezca.'''
     
-    '''Primero revisamos si el texto ingresado es un título presente en el dataframe'''
-
     titulo = titulo.title()
+
+    '''Primero revisamos si el texto ingresado es un título presente en el dataframe'''    
 
     j = 0
     for i in range(0, movies_df.shape[0]):
@@ -108,13 +117,13 @@ def votos_titulo(titulo: str):
     if j == 0:
         return {'mensaje_error': 'El texto ingresado no se encuentra en el conjunto de datos'}
     else:
-        movies_df.sort_values(by = ['vote_count'], ascending = False, inplace = True)
+        movies_df.sort_values(by = ['vote_count'], ascending = False, inplace = True) # Ordenamos el dataframe por vote_counte de forma descendente
         i = 0
-        while titulo != movies_df.loc[i, 'title']:
+        while titulo != movies_df.loc[i, 'title']: # Iteramos hasta conseguir el título de la película y guardamos el índice
             i += 1
-        voto_total = movies_df.loc[i, 'vote_count']
-        voto_promedio = movies_df.loc[i, 'vote_average']
-        if voto_total < 2000:
+        voto_total = movies_df.loc[i, 'vote_count'] # Extraemos el voto total
+        voto_promedio = movies_df.loc[i, 'vote_average'] # Extraemos el voto promedio
+        if voto_total < 2000: 
             return {'mensaje_error': 'La cantidad de votos de la película es menor a 2000, por lo que no se devuelve ningún valor'}
         else:
             return {'titulo': titulo,'voto_total': voto_total, 'voto_promedio': voto_promedio}
@@ -142,14 +151,14 @@ def get_actor(nombre_actor: str):
     if j == 0:
         return {'mensaje_error': 'El texto ingresado no se encuentra en el conjunto de datos'}
     else:
-        cantidad = int(cast_df[cast_df['name'] == nombre_actor]['movie_id'].count())
-        lista_peliculas = list(cast_df[cast_df['name'] == nombre_actor]['movie_id'])
+        cantidad = int(cast_df[cast_df['name'] == nombre_actor]['movie_id'].count()) # Calculamos la cantidad de películas en las que está presente el actor
+        lista_peliculas = list(cast_df[cast_df['name'] == nombre_actor]['movie_id']) # Creamos una lista con las películas donde actúe el actor
         retorno_total = 0
-        for l in lista_peliculas:
+        for l in lista_peliculas: # Vamos iterando en las películas y sumamos el retorno de cada una
             l = float(l)
             x = movies_df[movies_df['id'] == l]['return'].reset_index()
             retorno_total += int(x.loc[0, 'return'])
-        retorno_promedio = retorno_total / cantidad  
+        retorno_promedio = retorno_total / cantidad  # Calculamos el retorno promedio
         return {'actor': nombre_actor, 'cantidad_filmaciones': cantidad, 'retorno_total': retorno_total, 'retorno_promedio': retorno_promedio}
     
 
@@ -175,7 +184,10 @@ def get_director(nombre_director: str):
     if j == 0:
         return {'mensaje_error': 'El texto ingresado no se encuentra en el conjunto de datos'}
     else:
-        lista_peliculas = list(crew_df[(crew_df['name'] == nombre_director)]['movie_id'])
+        lista_peliculas = list(crew_df[(crew_df['name'] == nombre_director)]['movie_id']) # Extraemos la lista de películas donde estuvo el director
+        
+        ''' Definimos todas las variables que se usaran en el return'''       
+
         retorno_total_director = 0
         peliculas = []
         titulo = ''
@@ -184,7 +196,7 @@ def get_director(nombre_director: str):
         budget_pelicula = 0
         revenue_pelicula = 0
         movie_dict = {}
-        for l in lista_peliculas:
+        for l in lista_peliculas: # Iteramos en la lista de películas y vamos extrayendo los diferentes valores que se devolverán como respuesta de la función
             l = float(l)
             x = movies_df[movies_df['id'] == l]['return'].reset_index()
             retorno_total_director += int(x.loc[0, 'return'])
@@ -221,7 +233,7 @@ def recomendacion(titulo: str):
         return {'mensaje_error': 'El texto ingresado no se encuentra en el conjunto de datos'}
     else:
 
-        ''' Vectorizamos la columna union y se remueven las stopwords'''
+        ''' Vectorizamos la columna union y se remueven las stopwords. Se utiliza TfidfVectorizer'''
 
         cv = TfidfVectorizer(max_features = 2000, stop_words = 'english')
         vector = cv.fit_transform(model_df['union']).toarray()
