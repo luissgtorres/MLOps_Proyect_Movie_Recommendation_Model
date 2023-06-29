@@ -19,7 +19,7 @@ El modelo devuelve 5 películas recomendadas a partir del título de una pelícu
 
 Mediante el siguiente [**link**](https://primer-proyecto-individual-mlops.onrender.com/docs) se puede acceder a la API desplegada en Render.
 
-## Funcionalidades del proyect
+## Funcionalidades del proyecto
 
 ![Estrucutra_API_PI_1](https://github.com/luissgtorres/MLOps_Proyect_Movie_Recommendation_Model/assets/113273616/c12938a7-9236-4935-97c2-6e39482b80a9)
 
