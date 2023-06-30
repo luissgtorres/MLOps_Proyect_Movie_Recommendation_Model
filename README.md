@@ -32,7 +32,7 @@ La API cuenta con 7 funciones:
   - **/get_director/{nombre_director}**: Devuelve el éxito del director ingresado medido a través del retorno. Además, devulve las películas que haya dirigido, la fecha de lanzamiento, retorno, costo y ganancia de cada película.
   - **/recomendacion/{titulo}**: Devuelve una lista de 5 películas recomendadas a partir del título de película ingresado.
 
-Se puede observar la API en funcionamiento a través del siguiente [**video**]().
+Se puede observar la API en funcionamiento a través del siguiente [**video**](https://youtu.be/no0m_zAN-f0).
 
 ## Estructura del repositorio
 
