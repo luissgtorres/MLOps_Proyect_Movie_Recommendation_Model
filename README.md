@@ -82,4 +82,4 @@ El modelo fue realizado utilizando Python como lenguaje de programación junto c
   
 ## Autor
 
-[Luis Torres](luisgtorres16@gmail.com)
+[Luis Torres](https://www.linkedin.com/in/luis-gerardo-torres-aponte/)
